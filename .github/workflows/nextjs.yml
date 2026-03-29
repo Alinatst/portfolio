@@ -1,55 +1,79 @@
-name: Deploy Next.js to GitHub Pages
+name: Deploy Next.js Portfolio to GitHub Pages
 
 on:
+  # Запуск при пуше в ветку main
   push:
     branches:
       - main
+  # Возможность запустить вручную из вкладки Actions
+  workflow_dispatch:
 
+# Разрешения для GitHub Pages
 permissions:
   contents: read
   pages: write
   id-token: write
 
+# Отмена предыдущих запусков при новом пуше
 concurrency:
   group: "pages"
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
+  # ===========================
+  # JOB 1: Сборка проекта
+  # ===========================
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      # 1. Клонируем репозиторий
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Node
+      # 2. Настраиваем Node.js
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "20"
-          cache: 'npm'
+          cache: "npm"
 
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-        with:
-          static_site_generator: next
-
+      # 3. Устанавливаем зависимости
       - name: Install dependencies
         run: npm ci
 
-      - name: Build with Next.js
+      # 4. Собираем проект (статический экспорт)
+      - name: Build Next.js app
         run: npm run build
+        env:
+          NEXT_PUBLIC_GITHUB_PAGES: "true"
 
-      - name: Upload artifact
+      # 5. Проверяем, что папка out/ создана
+      - name: Verify build output
+        run: |
+          if [ ! -d "out" ]; then
+            echo "❌ Build failed: 'out' directory not found"
+            exit 1
+          fi
+          echo "✅ Build successful: 'out' directory exists"
+
+      # 6. Загружаем артефакт для деплоя
+      - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: ./out
 
+  # ===========================
+  # JOB 2: Деплой на GitHub Pages
+  # ===========================
   deploy:
+    runs-on: ubuntu-latest
+    needs: build
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    needs: build
+    
     steps:
+      # 7. Деплоим на GitHub Pages
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
