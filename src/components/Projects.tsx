@@ -11,7 +11,7 @@ const projects = [
     demoUrl: 'https://example.com',
     githubUrl: 'https://github.com/Alinatst',
     gradient: 'from-forest-600 to-forest-400',
-    image: 'https://alinatst.github.io/portfolio/images/projects/project1.jpg',
+    image: '/images/projects/project1.jpg',
   },
   {
     title: 'Task Management App',
@@ -20,7 +20,7 @@ const projects = [
     demoUrl: 'https://example.com',
     githubUrl: 'https://github.com/Alinatst',
     gradient: 'from-forest-700 to-forest-500',
-    image: 'https://alinatst.github.io/portfolio/images/projects/project2.jpg',
+    image: '/images/projects/project2.jpg',
   },
   {
     title: 'Weather Dashboard',
@@ -29,7 +29,7 @@ const projects = [
     demoUrl: 'https://example.com',
     githubUrl: 'https://github.com/Alinatst',
     gradient: 'from-forest-800 to-forest-600',
-    image: 'https://alinatst.github.io/portfolio/images/projects/project3.jpg',
+    image: '/images/projects/project3.jpg',
   },
 ];
 
