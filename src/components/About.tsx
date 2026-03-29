@@ -59,7 +59,7 @@ export default function About() {
             {/* Рамка вокруг аватара */}
             <div className="w-64 h-64 sm:w-80 sm:h-80 rounded-2xl overflow-hidden border-2 border-forest-400/50 shadow-2xl">
               <img
-                src={`${process.env.NEXT_PUBLIC_BASE_PATH || ''}/images/about-photo.jpg`}
+                src="/portfolio/images/about-photo.jpg"
                 alt="Alina - Frontend Developer"
                 className="w-full h-full object-cover"
               />
