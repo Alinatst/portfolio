@@ -9,7 +9,7 @@ export default function Hero() {
       id="home"
       className="min-h-screen flex items-center justify-center relative overflow-hidden bg-gradient-to-b from-forest-900 to-forest-700 py-20"
       style={{
-        backgroundImage: `url('https://alinatst.github.io/portfolio/images/hero-bg.jpg')`,
+        backgroundImage: `url('/images/hero-bg.jpg')`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundAttachment: 'fixed',

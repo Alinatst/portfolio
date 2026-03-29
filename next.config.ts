@@ -6,10 +6,9 @@ const nextConfig: NextConfig = {
     unoptimized: true,
   },
   trailingSlash: true,
-  // ВАЖНО: basePath для GitHub Pages
+  // Оставьте ТОЛЬКО basePath
   basePath: '/portfolio',
-  // assetPrefix для статических файлов
-  assetPrefix: '/portfolio/',
+  // УДАЛИТЕ assetPrefix
 };
 
 export default nextConfig;
