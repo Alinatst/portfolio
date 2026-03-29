@@ -1,39 +1,109 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Mail, GitBranch, Send, MapPin, Phone } from 'lucide-react';
-import { useState } from 'react';
+import { Mail, GitBranch, Send, MapPin, Phone, CheckCircle, AlertCircle } from 'lucide-react';
+import { useState, FormEvent, ChangeEvent } from 'react';
+import emailjs from '@emailjs/browser';
+
+interface FormData {
+  name: string;
+  email: string;
+  message: string;
+}
+
+interface FormErrors {
+  name?: string;
+  email?: string;
+  message?: string;
+}
 
 export default function Contacts() {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     name: '',
     email: '',
     message: '',
   });
+  const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    
-    // Имитация отправки (для реальной формы используйте EmailJS или Formspree)
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-    
-    console.log('Form submitted:', formData);
-    setSubmitted(true);
-    setIsSubmitting(false);
-    setFormData({ name: '', email: '', message: '' });
-    
-    // Сброс сообщения через 5 секунд
-    setTimeout(() => setSubmitted(false), 5000);
+  // Валидация имени
+  const validateName = (name: string): string | undefined => {
+    if (!name.trim()) return 'Name is required';
+    if (name.trim().length < 2) return 'Name must be at least 2 characters';
+    if (!/^[a-zA-Z\s]+$/.test(name)) return 'Name can only contain letters';
+    return undefined;
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+  // Валидация email
+  const validateEmail = (email: string): string | undefined => {
+    if (!email.trim()) return 'Email is required';
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return 'Please enter a valid email';
+    return undefined;
+  };
+
+  // Валидация сообщения
+  const validateMessage = (message: string): string | undefined => {
+    if (!message.trim()) return 'Message is required';
+    if (message.trim().length < 10) return 'Message must be at least 10 characters';
+    if (message.trim().length > 500) return 'Message must be less than 500 characters';
+    return undefined;
+  };
+
+  // Валидация всей формы
+  const validateForm = (): boolean => {
+    const newErrors: FormErrors = {
+      name: validateName(formData.name),
+      email: validateEmail(formData.email),
+      message: validateMessage(formData.message),
+    };
+
+    setErrors(newErrors);
+    return !Object.values(newErrors).some(error => error !== undefined);
+  };
+
+  // Обработка изменения полей
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+    
+    // Валидация в реальном времени (после первого ввода)
+    if (Object.keys(errors).length > 0) {
+      if (name === 'name') setErrors(prev => ({ ...prev, name: validateName(value) }));
+      if (name === 'email') setErrors(prev => ({ ...prev, email: validateEmail(value) }));
+      if (name === 'message') setErrors(prev => ({ ...prev, message: validateMessage(value) }));
+    }
+  };
+
+// Обработка отправки формы
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    
+    if (!validateForm()) return;
+
+    setIsSubmitting(true);
+    setSubmitStatus('idle');
+
+    try {
+      await emailjs.send(
+        process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!,
+        process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID!,
+        {
+          user_name: formData.name,
+          user_email: formData.email,
+          message: formData.message,
+        },
+        process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!
+      );
+
+      setSubmitStatus('success');
+      setFormData({ name: '', email: '', message: '' });
+      setErrors({});
+    } catch (error: any) {
+      setSubmitStatus('error');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -64,7 +134,7 @@ export default function Contacts() {
           transition={{ duration: 0.6, delay: 0.2 }}
           viewport={{ once: true }}
         >
-          <p className="text-forest-200 text-lg">
+          <p className="text-forest-200 text-lg text-center">
             Have a question or want to work together? I'd love to hear from you!
           </p>
         </motion.div>
@@ -75,7 +145,7 @@ export default function Contacts() {
           <motion.div
             className="space-y-8"
             initial={{ opacity: 0, x: -50 }}
-            whileInView={{ opacity: 1, x: 0, y: 10 }}
+            whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
             viewport={{ once: true }}
           >
@@ -92,11 +162,11 @@ export default function Contacts() {
             {/* Контактные карточки */}
             <div className="space-y-4">
               <motion.div
-                className="flex items-center gap-4 bg-forest-800/50 border border-forest-700/50 rounded-lg p-4 hover:bg-forest-700/50 transition-all duration-300"
-                whileHover={{ x: 5 }}
+                className="group flex items-center gap-4 bg-forest-800/50 border border-forest-700/50 rounded-lg p-4 hover:bg-forest-700/50 hover:border-forest-500/50 transition-all duration-300"
+                whileHover={{ x: 8 }}
               >
-                <div className="w-16 h-12 bg-forest-600/30 rounded-lg flex items-center justify-center">
-                  <Mail size={24} className="text-forest-200" />
+                <div className="w-12 h-12 bg-forest-600/30 rounded-lg flex items-center justify-center group-hover:bg-forest-500/30 group-hover:scale-110 transition-all duration-300">
+                  <Mail size={24} className="text-forest-200 group-hover:text-forest-100 transition-colors duration-300" />
                 </div>
                 <div>
                   <p className="text-forest-200 text-sm font-medium">Email</p>
@@ -107,11 +177,11 @@ export default function Contacts() {
               </motion.div>
 
               <motion.div
-                className="flex items-center gap-4 bg-forest-800/50 border border-forest-700/50 rounded-lg p-4 hover:bg-forest-700/50 transition-all duration-300"
-                whileHover={{ x: 5 }}
+                className="group flex items-center gap-4 bg-forest-800/50 border border-forest-700/50 rounded-lg p-4 hover:bg-forest-700/50 hover:border-forest-500/50 transition-all duration-300"
+                whileHover={{ x: 8 }}
               >
-                <div className="w-16 h-12 bg-forest-600/30 rounded-lg flex items-center justify-center">
-                  <GitBranch size={24} className="text-forest-200" />
+                <div className="w-12 h-12 bg-forest-600/30 rounded-lg flex items-center justify-center group-hover:bg-forest-500/30 group-hover:scale-110 transition-all duration-300">
+                  <GitBranch size={24} className="text-forest-200 group-hover:text-forest-100 transition-colors duration-300" />
                 </div>
                 <div>
                   <p className="text-forest-200 text-sm font-medium">GitHub</p>
@@ -127,11 +197,11 @@ export default function Contacts() {
               </motion.div>
 
               <motion.div
-                className="flex items-center gap-4 bg-forest-800/50 border border-forest-700/50 rounded-lg p-4 hover:bg-forest-700/50 transition-all duration-300"
-                whileHover={{ x: 5 }}
+                className="group flex items-center gap-4 bg-forest-800/50 border border-forest-700/50 rounded-lg p-4 hover:bg-forest-700/50 hover:border-forest-500/50 transition-all duration-300"
+                whileHover={{ x: 8 }}
               >
-                <div className="w-16 h-12 bg-forest-600/30 rounded-lg flex items-center justify-center">
-                  <MapPin size={24} className="text-forest-200" />
+                <div className="w-12 h-12 bg-forest-600/30 rounded-lg flex items-center justify-center group-hover:bg-forest-500/30 group-hover:scale-110 transition-all duration-300">
+                  <MapPin size={24} className="text-forest-200 group-hover:text-forest-100 transition-colors duration-300" />
                 </div>
                 <div>
                   <p className="text-forest-200 text-sm font-medium">Location</p>
@@ -144,7 +214,7 @@ export default function Contacts() {
           {/* Правая колонка - форма обратной связи */}
           <motion.div
             initial={{ opacity: 0, x: 50 }}
-            whileInView={{ opacity: 1, x: 0, y: 10 }}
+            whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.5 }}
             viewport={{ once: true }}
           >
@@ -152,7 +222,7 @@ export default function Contacts() {
               {/* Имя */}
               <div>
                 <label htmlFor="name" className="block text-forest-200 text-sm font-medium mb-2">
-                  Your Name
+                  Your Name *
                 </label>
                 <input
                   type="text"
@@ -160,16 +230,29 @@ export default function Contacts() {
                   name="name"
                   value={formData.name}
                   onChange={handleChange}
-                  required
-                  className="w-full px-4 py-3 bg-forest-900/50 border border-forest-700 rounded-lg text-forest-100 placeholder-forest-500 focus:outline-none focus:border-forest-400 focus:ring-1 focus:ring-forest-400 transition-all duration-300"
+                  className={`w-full px-4 py-3 bg-forest-900/50 border rounded-lg text-forest-100 placeholder-forest-500 focus:outline-none focus:ring-1 transition-all duration-300 ${
+                    errors.name 
+                      ? 'border-red-500 focus:border-red-500 focus:ring-red-500' 
+                      : 'border-forest-700 focus:border-forest-400 focus:ring-forest-400'
+                  }`}
                   placeholder="John Doe"
                 />
+                {errors.name && (
+                  <motion.p 
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="text-red-400 text-xs mt-1 flex items-center gap-1"
+                  >
+                    <AlertCircle size={12} />
+                    {errors.name}
+                  </motion.p>
+                )}
               </div>
 
               {/* Email */}
               <div>
                 <label htmlFor="email" className="block text-forest-200 text-sm font-medium mb-2">
-                  Your Email
+                  Your Email *
                 </label>
                 <input
                   type="email"
@@ -177,27 +260,57 @@ export default function Contacts() {
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
-                  required
-                  className="w-full px-4 py-3 bg-forest-900/50 border border-forest-700 rounded-lg text-forest-100 placeholder-forest-500 focus:outline-none focus:border-forest-400 focus:ring-1 focus:ring-forest-400 transition-all duration-300"
+                  className={`w-full px-4 py-3 bg-forest-900/50 border rounded-lg text-forest-100 placeholder-forest-500 focus:outline-none focus:ring-1 transition-all duration-300 ${
+                    errors.email 
+                      ? 'border-red-500 focus:border-red-500 focus:ring-red-500' 
+                      : 'border-forest-700 focus:border-forest-400 focus:ring-forest-400'
+                  }`}
                   placeholder="john@example.com"
                 />
+                {errors.email && (
+                  <motion.p 
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="text-red-400 text-xs mt-1 flex items-center gap-1"
+                  >
+                    <AlertCircle size={12} />
+                    {errors.email}
+                  </motion.p>
+                )}
               </div>
 
               {/* Сообщение */}
               <div>
                 <label htmlFor="message" className="block text-forest-200 text-sm font-medium mb-2">
-                  Your Message
+                  Your Message *
                 </label>
                 <textarea
                   id="message"
                   name="message"
                   value={formData.message}
                   onChange={handleChange}
-                  required
                   rows={5}
-                  className="w-full px-4 py-3 bg-forest-900/50 border border-forest-700 rounded-lg text-forest-100 placeholder-forest-500 focus:outline-none focus:border-forest-400 focus:ring-1 focus:ring-forest-400 transition-all duration-300 resize-none"
+                  className={`w-full px-4 py-3 bg-forest-900/50 border rounded-lg text-forest-100 placeholder-forest-500 focus:outline-none focus:ring-1 transition-all duration-300 resize-none ${
+                    errors.message 
+                      ? 'border-red-500 focus:border-red-500 focus:ring-red-500' 
+                      : 'border-forest-700 focus:border-forest-400 focus:ring-forest-400'
+                  }`}
                   placeholder="Tell me about your project..."
                 />
+                {errors.message && (
+                  <motion.p 
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="text-red-400 text-xs mt-1 flex items-center gap-1"
+                  >
+                    <AlertCircle size={12} />
+                    {errors.message}
+                  </motion.p>
+                )}
+                {/* Счётчик символов */}
+                <p className="text-forest-500 text-xs mt-1 text-right">
+                  {formData.message.length}/500
+                </p>
               </div>
 
               {/* Кнопка отправки */}
@@ -205,8 +318,8 @@ export default function Contacts() {
                 type="submit"
                 disabled={isSubmitting}
                 className="w-full px-8 py-4 bg-forest-400 text-forest-900 font-semibold rounded-lg hover:bg-forest-200 transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
+                whileHover={{ scale: isSubmitting ? 1 : 1.02 }}
+                whileTap={{ scale: isSubmitting ? 1 : 0.98 }}
               >
                 {isSubmitting ? (
                   <>
@@ -222,14 +335,29 @@ export default function Contacts() {
               </motion.button>
 
               {/* Сообщение об успешной отправке */}
-              {submitted && (
+              {submitStatus === 'success' && (
                 <motion.div
-                  className="p-4 bg-forest-700/50 border border-forest-500 rounded-lg text-center"
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
+                  className="p-4 bg-green-900/50 border border-green-500 rounded-lg flex items-center gap-3"
                 >
-                  <p className="text-forest-100 font-medium">
-                    ✅ Message sent successfully! I'll get back to you soon.
+                  <CheckCircle size={20} className="text-green-400" />
+                  <p className="text-green-100 font-medium">
+                    Message sent successfully! I'll get back to you soon.
+                  </p>
+                </motion.div>
+              )}
+
+              {/* Сообщение об ошибке */}
+              {submitStatus === 'error' && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="p-4 bg-red-900/50 border border-red-500 rounded-lg flex items-center gap-3"
+                >
+                  <AlertCircle size={20} className="text-red-400" />
+                  <p className="text-red-100 font-medium">
+                    Failed to send message. Please try again or email me directly.
                   </p>
                 </motion.div>
               )}

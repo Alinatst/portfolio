@@ -8,6 +8,7 @@ out/
 # Environment files (не загружаем в репозиторий)
 .env*.local
 .env.production
+.env.local
 
 # OS files
 .DS_Store

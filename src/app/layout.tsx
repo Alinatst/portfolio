@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
+import { ThemeProvider } from "@/context/ThemeContext";
+
 
 const inter = Inter({
   subsets: ["cyrillic", "latin"],
@@ -17,16 +19,6 @@ const playfair = Playfair_Display({
 export const metadata: Metadata = {
   title: "Alina - Frontend Developer Portfolio",
   description: "Personal portfolio of a Frontend Developer specializing in Next.js, TypeScript, and React.",
-  keywords: ["frontend", "developer", "portfolio", "Next.js", "TypeScript", "React"],
-  authors: [{ name: "Alina" }],
-  openGraph: {
-    title: "Alina - Frontend Developer",
-    description: "Personal portfolio of a Frontend Developer",
-    url: "https://github.com/Alinatst",
-    siteName: "Alina Portfolio",
-    locale: "en_US",
-    type: "website",
-  },
 };
 
 export default function RootLayout({
@@ -35,9 +27,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${playfair.variable}`}>
+    <html lang="en" className={`${inter.variable} ${playfair.variable}`} suppressHydrationWarning>
       <body className="antialiased">
-        {children}
+        {/* Листья ДО ThemeProvider и children */}
+        <ThemeProvider>
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );

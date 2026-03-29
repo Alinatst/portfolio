@@ -1,61 +1,46 @@
 @import "tailwindcss";
 
-/* Forest Theme - настройка через @theme */
+/* Тёмная тема (по умолчанию) */
 @theme {
-  --color-forest-900: #051F20;
-  --color-forest-800: #0B2B26;
-  --color-forest-700: #163832;
-  --color-forest-600: #235347;
-  --color-forest-400: #8EB69B;
-  --color-forest-200: #C5E0D0;
-  --color-forest-100: #DAF1DE;
-  
-  --font-family-sans: "Inter", sans-serif;
-  --font-family-serif: "Playfair Display", serif;
+  --color-forest-900: #0d2824;
+  --color-forest-800: #153a36;
+  --color-forest-700: #1e4f49;
+  --color-forest-600: #2a6b63;
+  --color-forest-500: #3a8c82;
+  --color-forest-400: #6ab0a3;
+  --color-forest-300: #9bc9bf;
+  --color-forest-200: #cde4dd;
+  --color-forest-100: #e8f5f0;
+  --color-forest-50: #f4faf8;
 }
 
-/* Глобальные стили */
-:root {
-  --color-forest-900: #051F20;
-  --color-forest-800: #0B2B26;
-  --color-forest-700: #163832;
-  --color-forest-600: #235347;
-  --color-forest-400: #8EB69B;
-  --color-forest-200: #C5E0D0;
-  --color-forest-100: #DAF1DE;
+/* Светлая тема - переопределяем переменные */
+.light {
+  --color-forest-900: #f4faf8;
+  --color-forest-800: #e8f5f0;
+  --color-forest-700: #cde4dd;
+  --color-forest-600: #9bc9bf;
+  --color-forest-500: #6ab0a3;
+  --color-forest-400: #3a8c82;
+  --color-forest-300: #2a6b63;
+  --color-forest-200: #1e4f49;
+  --color-forest-100: #153a36;
+  --color-forest-50: #0d2824;
 }
 
+/* Базовые стили */
 * {
   box-sizing: border-box;
-  padding: 0;
-  margin: 0;
-}
-
-html {
-  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--color-forest-900);
+  margin: 0;
+  background-color: var(--color-forest-900);
   color: var(--color-forest-100);
-  font-family: var(--font-family-sans);
-  line-height: 1.6;
+  font-family: var(--font-inter), sans-serif;
 }
 
-/* Кастомный скроллбар */
-::-webkit-scrollbar {
-  width: 10px;
-}
-
-::-webkit-scrollbar-track {
-  background: var(--color-forest-900);
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--color-forest-600);
-  border-radius: 5px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--color-forest-400);
+/* Кастомные утилиты */
+@utility text-balance {
+  text-wrap: balance;
 }

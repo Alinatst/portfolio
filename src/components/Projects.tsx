@@ -11,6 +11,7 @@ const projects = [
     demoUrl: 'https://example.com',
     githubUrl: 'https://github.com/Alinatst',
     gradient: 'from-forest-600 to-forest-400',
+    image: '/images/projects/project1.jpg',
   },
   {
     title: 'Task Management App',
@@ -19,6 +20,7 @@ const projects = [
     demoUrl: 'https://example.com',
     githubUrl: 'https://github.com/Alinatst',
     gradient: 'from-forest-700 to-forest-500',
+    image: '/images/projects/project2.jpg',
   },
   {
     title: 'Weather Dashboard',
@@ -27,6 +29,7 @@ const projects = [
     demoUrl: 'https://example.com',
     githubUrl: 'https://github.com/Alinatst',
     gradient: 'from-forest-800 to-forest-600',
+    image: '/images/projects/project3.jpg',
   },
 ];
 
@@ -41,7 +44,7 @@ export default function Projects() {
         <motion.div
           className="text-center mb-8"
           initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          whileInView={{ opacity: 1, y: -20 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
         >
@@ -55,7 +58,7 @@ export default function Projects() {
         <motion.div
           className="text-center mb-16"
           initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 10 }}
+          whileInView={{ opacity: 1, y: -10 }}
           transition={{ duration: 0.6, delay: 0.2 }}
           viewport={{ once: true }}
         >
@@ -69,21 +72,30 @@ export default function Projects() {
           {projects.map((project, index) => (
             <motion.div
               key={project.title}
-              className="group bg-forest-800/50 border border-forest-700/50 rounded-xl overflow-hidden hover:bg-forest-700/50 hover:border-forest-600/50 transition-all duration-300 hover:shadow-xl hover:shadow-forest-900/50"
+              className="group bg-forest-800/50 border border-forest-700/50 rounded-xl overflow-hidden hover:bg-forest-700/50 hover:border-forest-500/50 transition-all duration-500 hover:shadow-2xl hover:shadow-forest-900/50 hover:-translate-y-2"
               initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: index * 0.15 }}
               viewport={{ once: true }}
             >
               {/* Карточка проекта */}
               <div className="p-6 flex flex-col h-full">
+                {/* Изображение проекта */}
+                <div className="mb-4 rounded-lg overflow-hidden border border-forest-700/50 group-hover:border-forest-500/50 transition-colors duration-300">
+                  <img
+                    src={project.image}
+                    alt={project.title}
+                    className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500"
+                  />
+                </div>
+
                 {/* Иконка папки с градиентом */}
-                <div className={`w-14 h-14 rounded-lg bg-gradient-to-br ${project.gradient} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
+                <div className={`w-14 h-14 rounded-lg bg-gradient-to-br ${project.gradient} flex items-center justify-center mb-4 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500`}>
                   <Folder size={28} className="text-forest-100" />
                 </div>
 
                 {/* Название проекта */}
-                <h3 className="text-xl sm:text-2xl font-serif font-bold text-forest-100 mb-3">
+                <h3 className="text-xl sm:text-2xl font-serif font-bold text-forest-100 mb-3 group-hover:text-forest-200 transition-colors duration-300">
                   {project.title}
                 </h3>
 
@@ -97,7 +109,7 @@ export default function Projects() {
                   {project.technologies.map((tech) => (
                     <span
                       key={tech}
-                      className="px-3 py-1 bg-forest-700/50 text-forest-200 text-xs font-medium rounded-full border border-forest-600/30"
+                      className="px-3 py-1 bg-forest-700/50 text-forest-200 text-xs font-medium rounded-full border border-forest-600/30 group-hover:bg-forest-600/50 group-hover:border-forest-500/50 transition-all duration-300"
                     >
                       {tech}
                     </span>
@@ -105,23 +117,23 @@ export default function Projects() {
                 </div>
 
                 {/* Ссылки на демо и GitHub */}
-                <div className="flex gap-4 pt-4 border-t border-forest-700/50">
+                <div className="flex gap-4 pt-4 border-t border-forest-700/50 group-hover:border-forest-600/50 transition-colors duration-300">
                   <a
                     href={project.demoUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-forest-200 hover:text-forest-100 transition-colors text-sm font-medium"
+                    className="flex items-center gap-2 text-forest-200 hover:text-forest-100 transition-colors text-sm font-medium group/link"
                   >
-                    <ExternalLink size={16} />
+                    <ExternalLink size={16} className="group-hover/link:scale-110 transition-transform duration-300" />
                     <span>Live Demo</span>
                   </a>
                   <a
                     href={project.githubUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-forest-200 hover:text-forest-100 transition-colors text-sm font-medium"
+                    className="flex items-center gap-2 text-forest-200 hover:text-forest-100 transition-colors text-sm font-medium group/link"
                   >
-                    <GitBranch size={16} />
+                    <GitBranch size={16} className="group-hover/link:scale-110 transition-transform duration-300" />
                     <span>Source Code</span>
                   </a>
                 </div>

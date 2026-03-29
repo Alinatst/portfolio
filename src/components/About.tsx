@@ -47,23 +47,25 @@ export default function About() {
 
         {/* Контент - две колонки */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-          {/* Левая колонка - изображение/аватар */}
-          <motion.div
-            className="flex justify-center lg:justify-end"
-            initial={{ opacity: 0, x: -50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            viewport={{ once: true }}
-          >
-            <div className="relative">
-              {/* Рамка вокруг аватара */}
-              <div className="w-64 h-64 sm:w-80 sm:h-80 bg-forest-600/30 rounded-2xl flex items-center justify-center border-2 border-forest-400/50">
-                <User size={120} className="text-forest-200" />
-              </div>
-              {/* Декоративный элемент */}
-              <div className="absolute -bottom-4 -right-4 w-32 h-32 bg-forest-400/20 rounded-xl -z-10"></div>
+        {/* Левая колонка - изображение/аватар */}
+        <motion.div
+          className="flex justify-center lg:justify-end"
+          initial={{ opacity: 0, x: -50 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          viewport={{ once: true }}
+        >
+          <div className="relative">
+            {/* Рамка вокруг аватара */}
+            <div className="w-64 h-64 sm:w-80 sm:h-80 rounded-2xl overflow-hidden border-2 border-forest-400/50 shadow-2xl">
+              <img
+                src="/images/about-photo.jpg"
+                alt="Alina - Frontend Developer"
+                className="w-full h-full object-cover"
+              />
             </div>
-          </motion.div>
+          </div>
+        </motion.div>
 
           {/* Правая колонка - текст */}
           <motion.div
