@@ -6,9 +6,7 @@ const nextConfig: NextConfig = {
     unoptimized: true,
   },
   trailingSlash: true,
-  // Оставьте ТОЛЬКО basePath
   basePath: '/portfolio',
-  // УДАЛИТЕ assetPrefix
 };
 
 export default nextConfig;

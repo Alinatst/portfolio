@@ -1,34 +1,15 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { User, Code, Briefcase, Award } from 'lucide-react';
+import { User, Code, Briefcase, GraduationCap } from 'lucide-react';
 
-const experiences = [
-  {
-    icon: <Briefcase size={24} />,
-    title: 'Experience',
-    description: 'Frontend Development',
-    details: '2+ years of experience building modern web applications',
-  },
-  {
-    icon: <Code size={24} />,
-    title: 'Stack',
-    description: 'Main Technologies',
-    details: 'Next.js, React, TypeScript, Tailwind CSS',
-  },
-  {
-    icon: <Award size={24} />,
-    title: 'Education',
-    description: 'Computer Science',
-    details: 'Bachelor degree in Software Engineering',
-  },
-];
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '/portfolio';
 
 export default function About() {
   return (
     <section
       id="about"
-      className="min-h-screen flex items-center justify-center py-24 bg-gradient-to-b from-forest-700 to-forest-800"
+      className="min-h-screen flex items-center justify-center py-24 bg-gradient-to-b from-forest-900 to-forest-800"
     >
       <div className="w-full px-6 sm:px-8 lg:px-10 max-w-7xl mx-auto">
         {/* Заголовок секции */}
@@ -47,79 +28,85 @@ export default function About() {
 
         {/* Контент - две колонки */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-        {/* Левая колонка - изображение/аватар */}
-        <motion.div
-          className="flex justify-center lg:justify-end"
-          initial={{ opacity: 0, x: -50 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          viewport={{ once: true }}
-        >
-          <div className="relative">
-            {/* Рамка вокруг аватара */}
-            <div className="w-64 h-64 sm:w-80 sm:h-80 rounded-2xl overflow-hidden border-2 border-forest-400/50 shadow-2xl">
-              <img
-                src='/images/about-photo.jpg'
-                alt="Alina - Frontend Developer"
-                className="w-full h-full object-cover"
-              />
+          {/* Левая колонка - изображение/аватар */}
+          <motion.div
+            className="flex justify-center lg:justify-end"
+            initial={{ opacity: 0, x: -50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            viewport={{ once: true }}
+          >
+            <div className="relative">
+              {/* Рамка вокруг аватара */}
+              <div className="w-64 h-64 sm:w-80 sm:h-80 rounded-2xl overflow-hidden border-2 border-forest-400/50 shadow-2xl">
+                <img
+                  src={`${basePath}/images/about-photo.jpg`}
+                  alt="Alina - Frontend Developer"
+                  className="w-full h-full object-cover"
+                  loading="eager"
+                />
+              </div>
             </div>
-          </div>
-        </motion.div>
+          </motion.div>
 
           {/* Правая колонка - текст */}
           <motion.div
-            className="space-y-8"
+            className="space-y-6"
             initial={{ opacity: 0, x: 50 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.4 }}
             viewport={{ once: true }}
           >
-            {/* Приветственный текст */}
-            <div className="space-y-6">
-              <p className="text-forest-200 text-lg sm:text-xl leading-relaxed">
-                Hi! I'm <span className="text-forest-100 font-semibold">Alina</span>, a passionate 
-                Frontend Developer focused on creating beautiful, functional, and user-centered 
-                digital experiences.
+            <div className="space-y-4">
+              <p className="text-forest-200 text-lg leading-relaxed">
+                Hi! I'm <span className="text-forest-100 font-semibold">Alina</span>, a passionate Frontend Developer focused on creating beautiful, functional, and user-centered digital experiences.
               </p>
-              <p className="text-forest-200 text-lg sm:text-xl leading-relaxed">
-                I specialize in building responsive web applications using modern technologies 
-                like <span className="text-forest-400 font-medium">Next.js</span>, 
-                <span className="text-forest-400 font-medium"> React</span>, and 
-                <span className="text-forest-400 font-medium"> TypeScript</span>. 
-                My goal is to write clean, efficient code while delivering exceptional user experiences.
+              <p className="text-forest-200 text-lg leading-relaxed">
+                I specialize in building responsive web applications using modern technologies like <span className="text-forest-400">Next.js</span>, <span className="text-forest-400">React</span>, and <span className="text-forest-400">TypeScript</span>. My goal is to write clean, efficient code while delivering exceptional user experiences.
               </p>
             </div>
 
-            {/* Карточки с опытом */}
+            {/* Карточки с информацией */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-6">
-              {experiences.map((item, index) => (
-                <motion.div
-                  key={item.title}
-                  className="bg-forest-800/50 border border-forest-600/50 rounded-lg p-4 text-center hover:bg-forest-700/50 transition-all duration-300"
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.4, delay: 0.6 + index * 0.1 }}
-                  viewport={{ once: true }}
-                >
-                  <div className="text-forest-400 flex justify-center mb-2">{item.icon}</div>
-                  <h3 className="text-forest-100 font-semibold text-sm mb-1">{item.title}</h3>
-                  <p className="text-forest-200 text-xs">{item.description}</p>
-                </motion.div>
-              ))}
+              <motion.div
+                className="bg-forest-800/50 border border-forest-700/50 rounded-lg p-4 text-center hover:bg-forest-700/50 hover:border-forest-500/50 transition-all duration-300"
+                whileHover={{ y: -5 }}
+              >
+                <Briefcase size={32} className="text-forest-400 mx-auto mb-2" />
+                <h3 className="text-forest-100 font-semibold mb-1">Experience</h3>
+                <p className="text-forest-300 text-sm">Frontend Development</p>
+              </motion.div>
+
+              <motion.div
+                className="bg-forest-800/50 border border-forest-700/50 rounded-lg p-4 text-center hover:bg-forest-700/50 hover:border-forest-500/50 transition-all duration-300"
+                whileHover={{ y: -5 }}
+              >
+                <Code size={32} className="text-forest-400 mx-auto mb-2" />
+                <h3 className="text-forest-100 font-semibold mb-1">Stack</h3>
+                <p className="text-forest-300 text-sm">Main Technologies</p>
+              </motion.div>
+
+              <motion.div
+                className="bg-forest-800/50 border border-forest-700/50 rounded-lg p-4 text-center hover:bg-forest-700/50 hover:border-forest-500/50 transition-all duration-300"
+                whileHover={{ y: -5 }}
+              >
+                <GraduationCap size={32} className="text-forest-400 mx-auto mb-2" />
+                <h3 className="text-forest-100 font-semibold mb-1">Education</h3>
+                <p className="text-forest-300 text-sm">Computer Science</p>
+              </motion.div>
             </div>
 
-                        {/* Кнопка - по центру с отступом */}
+            {/* Кнопка CTA */}
             <motion.div
-              className="flex justify-center pt-12"
+              className="pt-4"
               initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 10 }}
-              transition={{ duration: 0.4, delay: 1 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.6 }}
               viewport={{ once: true }}
             >
               <a
                 href="#contacts"
-                className="inline-block px-10 py-4 bg-forest-400 text-forest-900 font-semibold rounded-lg hover:bg-forest-200 transition-all duration-300 shadow-lg hover:shadow-xl text-center"
+                className="inline-block px-8 py-3 bg-forest-400 text-forest-900 font-semibold rounded-lg hover:bg-forest-200 transition-all duration-300 shadow-lg hover:shadow-xl"
               >
                 Let's Work Together
               </a>

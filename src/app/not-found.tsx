@@ -4,6 +4,8 @@ import { motion } from 'framer-motion';
 import { Home, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '/portfolio';
+
 export default function NotFound() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-forest-900 to-forest-800 px-6">
@@ -17,10 +19,10 @@ export default function NotFound() {
         >
           <div className="relative inline-block">
             <img
-                src='/images/404-meme.jpg'
-                alt="404 Meme"
-                className="w-64 h-64 mx-auto object-cover rounded-3xl drop-shadow-2xl"
-                />
+              src={`${basePath}/images/404-meme.jpg`}
+              alt="404 Meme"
+              className="w-64 h-64 mx-auto object-contain drop-shadow-2xl rounded-3xl"
+            />
             {/* Анимированные элементы вокруг */}
             <motion.div
               className="absolute -top-4 -right-4 w-16 h-16 bg-forest-400/30 rounded-full blur-xl"
@@ -76,7 +78,7 @@ export default function NotFound() {
         >
           Похоже, вы заблудились в цифровом лесу... 
           <br />
-          Но не волнуйтесь, даже лучший разработчик иногда создаёт 404! 
+          Но не волнуйтесь, даже лучший разработчик иногда создаёт 404! 😄
         </motion.p>
 
         {/* Кнопки навигации */}
@@ -109,7 +111,7 @@ export default function NotFound() {
           transition={{ duration: 0.6, delay: 1.2 }}
           className="text-forest-500 text-sm mt-12"
         >
-          
+          P.S. Если вы нашли эту страницу специально — вы настоящий исследователь! 🗺️
         </motion.p>
       </div>
     </div>
