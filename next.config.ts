@@ -1,15 +1,14 @@
 import type { NextConfig } from "next";
 
-// Определяем, запущен ли проект на GitHub Pages
 const isGitHubPages = process.env.NEXT_PUBLIC_GITHUB_PAGES === "true";
 
 const nextConfig: NextConfig = {
-  output: "export", // Статический экспорт для GitHub Pages
+  output: "export",
   images: {
-    unoptimized: true, // Отключаем оптимизацию изображений (требуется сервер)
+    unoptimized: true,
   },
-  trailingSlash: true, // Добавляет слэш в конце URL
-  // basePath только для продакшена на GitHub Pages
+  trailingSlash: true,
+  // ИЗМЕНИТЕ на название ВАШЕГО репозитория!
   basePath: isGitHubPages ? "/portfolio" : undefined,
 };
 
